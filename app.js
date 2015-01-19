@@ -221,6 +221,37 @@ PuzzleManager = {
     }
 
     return result;
+  },
+
+  depthCount: function(state, visited) {
+    // Counts how many possible states are at a certain depth. Evaluates via breadth-first-search.
+    // Usage: console.log(PuzzleManager.depthCount({ state: PuzzleManager.end, h: PuzzleManager.h(PuzzleManager.end), g: 0 }));
+    var visited = visited || {};
+
+    // Mark this state as visited.
+    visited[JSON.stringify(state.state)] = 1;
+
+    // Get list of fringe states.
+    state.children = PuzzleManager.fringe(state.state);
+
+    var count = 0;
+    for (var index in state.children) {
+        if (!visited[JSON.stringify(state.children[index].state)]) {
+            state.children[index].parent = state;
+            state.children[index].g = state.g + 1;
+
+            // If the child state is at depth 27 then increment the count.
+            if (state.children[index].g == 27) {
+                count++;
+            }
+            else {
+                // We're not there yet, so go deeper.
+                count += PuzzleManager.depthCount(state.children[index], visited);
+            }
+        }
+    }
+
+    return count;
   }
 };
 
