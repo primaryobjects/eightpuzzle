@@ -1,4 +1,4 @@
-d <- read.table('/home/nada/Desktop/steps-from-goal.txt',
+d <- read.table('steps-from-goal.txt',
                 sep=":", 
                 col.names=c('id', 'name'), 
                 fill=FALSE, 
