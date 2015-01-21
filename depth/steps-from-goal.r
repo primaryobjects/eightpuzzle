@@ -1,13 +1,14 @@
+library(ggplot2)
+
 d <- read.table('steps-from-goal.txt',
                 sep=":", 
-                col.names=c('id', 'name'), 
+                col.names=c('step', 'count'), 
                 fill=FALSE, 
                 strip.white=TRUE)
 
-mp <- barplot(d$name, names.arg=d$id, axes = TRUE)
-
-par(cex.lab=0.7, cex.axis=0.7)
-
-barplot(d$name, names.arg=d$id, las=2, axes = TRUE, cex.axis=1)
-
-axis(1, at = mp, labels = rep('', 32), tcl = -0.25, cex.lab=0.7, cex.axis=0.7)
+print(ggplot(d, aes(x=step, y=count)) + 
+        geom_bar(stat='identity') +
+        xlab('Steps From Goal') + 
+        ylab('Valid Board Configurations') + 
+        scale_x_continuous(breaks=seq(min(d$step), max(d$step))) + 
+        ggtitle('Eight Puzzle Board Combinations From Goal Using A*'))
