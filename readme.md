@@ -66,6 +66,13 @@ Running It
 node app
 ```
 
+Fun Fact
+----
+
+The number of possible eight-puzzle configurations at each step from the goal can be calculated by running a breadth-first search from the goal. Then evaluate backwards down all paths. Doing this shows all possible board configurations from the goal, as shown below.
+
+![Screenshot 1](https://raw.githubusercontent.com/primaryobjects/eightpuzzle/master/depth/steps-from-goal.png)
+
 License
 ----
 

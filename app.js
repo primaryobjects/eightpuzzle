@@ -223,35 +223,43 @@ PuzzleManager = {
     return result;
   },
 
-  depthCount: function(state, visited) {
-    // Counts how many possible states are at a certain depth. Evaluates via breadth-first-search.
-    // Usage: console.log(PuzzleManager.depthCount({ state: PuzzleManager.end, h: PuzzleManager.h(PuzzleManager.end), g: 0 }));
-    var visited = visited || {};
+  depthCount: function(state) {
+    // Counts how many possible states are at each depth. Evaluates via breadth-first-search.
+    // Usage: console.log(PuzzleManager.depthCount({ state: PuzzleManager.end, g: 0 }));
+    var nodes = [ state ];
+    var visited = {};
+    var results = {};
 
-    // Mark this state as visited.
-    visited[JSON.stringify(state.state)] = 1;
+    while (nodes.length > 0) {
+        // Take first node off list.
+        var node = nodes.shift();
 
-    // Get list of fringe states.
-    state.children = PuzzleManager.fringe(state.state);
+        // Make sure we haven't already visited this node from another branch.
+        if (!visited[JSON.stringify(node.state)]) {
+            // Mark node as visited.
+            visited[JSON.stringify(node.state)] = 1;
 
-    var count = 0;
-    for (var index in state.children) {
-        if (!visited[JSON.stringify(state.children[index].state)]) {
-            state.children[index].parent = state;
-            state.children[index].g = state.g + 1;
-
-            // If the child state is at depth 27 then increment the count.
-            if (state.children[index].g == 27) {
-                count++;
+            if (!results[node.g]) {
+                // Initialize count for this depth.
+                results[node.g] = 0;
             }
-            else {
-                // We're not there yet, so go deeper.
-                count += PuzzleManager.depthCount(state.children[index], visited);
+
+            // Increment node count at this depth.
+            results[node.g]++;
+
+            // Go deeper and evaluate children nodes, get list of fringe states.
+            var children = PuzzleManager.fringe(node.state);
+            for (var index in children) {
+                // Add this new node to the end of the list.
+                var child = children[index];
+                child.g = node.g + 1;
+
+                nodes.push(child);
             }
         }
     }
 
-    return count;
+    return results;
   }
 };
 
